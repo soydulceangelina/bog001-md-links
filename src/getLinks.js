@@ -4,9 +4,8 @@ const marked = require('marked');
 const { JSDOM } = require('jsdom');
 // fs es un modulo de NODE, readFileSync es un metodo de fs, para leer archivos de forma asincrona
 const { readFileSync } = require('fs');
-const { resolve } = require('path');
 
-const readingMarkdown = (file) => {
+module.exports.readingMarkdown = (file) => {
   const links = [];
 
   const expression = '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})';
@@ -26,9 +25,5 @@ const readingMarkdown = (file) => {
       links.push(getHref);
     }
   });
-  console.log(links);
+  return links;
 };
-
-// dirname es una variable global, representa la ruta donde se ejecuta el proceso
-// (/home/soydulceangelina/bog001-md-links/src/) desdesrc sale (../) para buscar el README.md.
-readingMarkdown(resolve(`${__dirname}/../README.md`));
