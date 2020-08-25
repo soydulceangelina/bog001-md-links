@@ -1,6 +1,8 @@
 {
   "name": "md-links",
   "version": "0.1.0",
+  "description": "proyecto bog001-md-links",
+  "main": "./bin/global",
   "dependencies": {
     "jsdom": "^16.4.0",
     "marked": "^1.1.1",
