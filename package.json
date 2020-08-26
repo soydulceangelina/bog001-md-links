@@ -3,14 +3,20 @@
   "version": "1.0.0",
   "description": "proyecto bog001-md-links",
   "main": "./src/index.js",
+  "author": "Dulce Mercado <soydulceangelina@gmail.com>",
+  "license": "MIT",
   "bin": {
     "mdLinks": "./bin/global.js"
   },
   "preferGlobal": true,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "dependencies": {
     "axios": "^0.20.0",
     "cli-color": "^2.0.0",
     "jsdom": "^16.4.0",
+    "link": "^0.1.5",
     "marked": "^1.1.1",
     "node-fetch": "^2.6.0"
   },
