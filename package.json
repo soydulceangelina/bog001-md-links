@@ -1,5 +1,5 @@
 {
-  "name": "md-links",
+  "name": "bog001-md-links",
   "version": "1.0.0",
   "description": "proyecto bog001-md-links",
   "main": "./src/index.js",
@@ -9,9 +9,7 @@
     "mdLinks": "./bin/global.js"
   },
   "preferGlobal": true,
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "dependencies": {
     "axios": "^0.20.0",
     "cli-color": "^2.0.0",
