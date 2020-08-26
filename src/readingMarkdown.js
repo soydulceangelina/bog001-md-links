@@ -5,6 +5,8 @@ const { JSDOM } = require('jsdom');
 // fs es un modulo de NODE, readFileSync es un metodo de fs, para leer archivos de forma asincrona
 const { readFileSync } = require('fs');
 
+// const fileObj = `${__dirname}/../README.md`; // mi path de prueba
+
 module.exports.readingMarkdown = (file) => {
   const links = [];
 
@@ -23,8 +25,10 @@ module.exports.readingMarkdown = (file) => {
 
   fakeDom.window.document.querySelectorAll('a').forEach((url) => { // ciclo para obtener los links
     const getHref = url.getAttribute('href');
+    const getText = url.innerHTML;
+    const getFile = file;
     if (getHref.match(regex)) {
-      links.push(getHref);
+      links.push({ getHref, getText, getFile });
     }
   });
   return links;
