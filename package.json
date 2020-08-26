@@ -4,6 +4,8 @@
   "description": "proyecto bog001-md-links",
   "main": "./bin/global",
   "dependencies": {
+    "axios": "^0.20.0",
+    "cli-color": "^2.0.0",
     "jsdom": "^16.4.0",
     "marked": "^1.1.1",
     "node-fetch": "^2.6.0"

@@ -368,6 +368,9 @@ si tienes dudas existenciales con respecto a estas decisiones. No existe una
 * [Leer un directorio](https://nodejs.org/api/fs.html#fs_fs_readdir_path_options_callback)
 * [Path](https://nodejs.org/api/path.html)
 * [Linea de comando CLI](https://medium.com/netscape/a-guide-to-create-a-nodejs-command-line-package-c2166ad0452e)
+* [Dulce borralo](https://www.flaticon.com/)
+* [Dulce borralo](https://www.soydulceangelina.com/)
+* [Dulce borralo](www.dulceangelina.com)
 
 ## 9. Checklist
 
@@ -400,4 +403,3 @@ si tienes dudas existenciales con respecto a estas decisiones. No existe una
 * [ ] Pruebas unitarias cubren un mínimo del 70% de statements, functions,
   lines, y branches.
 * [ ] Pasa tests (y linters) (`npm test`).
-
