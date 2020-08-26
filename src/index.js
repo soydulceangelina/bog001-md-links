@@ -29,4 +29,4 @@ const mdLinks = (path) => {
   // promesas y devuelve una promesa con las respuestas sean satisfactorias o no
 };
 
-module.exports = { mdLinks };
+module.exports = mdLinks;

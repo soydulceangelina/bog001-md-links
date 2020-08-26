@@ -2,18 +2,18 @@
 
 const process = require('process');
 const clc = require('cli-color');
-const random = require('../src/index');
+const mdLinks = require('../src/index');
 
 const file = process.argv[2];
 
 // el then recibe las respuestaS, iteramos sobre cada respuesta en el forEach
-random.mdLinks(file)
+mdLinks(file)
   .then((responses) => {
     responses.forEach((response) => {
       if (response.status === 'fulfilled') {
-        console.log(`${clc.blue(response.value.url)} ${clc.yellow(file)}`);
+        console.log(`${clc.blue.bgWhite(response.value.url)} ${clc.yellow(file)}`);
       } else {
-        console.log(`${clc.red(response.reason)}`);
+        console.log(`${clc.red.bgWhite(response.reason)}`);
       }
     });
   });
