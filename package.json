@@ -1,8 +1,12 @@
 {
   "name": "md-links",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "proyecto bog001-md-links",
-  "main": "./bin/global",
+  "main": "./src/index.js",
+  "bin": {
+    "mdLinks": "./bin/global.js"
+  },
+  "preferGlobal": true,
   "dependencies": {
     "axios": "^0.20.0",
     "cli-color": "^2.0.0",
