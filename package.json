@@ -1,9 +1,12 @@
 {
-  "name": "md-links",
+  "name": "@soydulceangelina/md-links",
   "version": "0.1.0",
   "description": "proyecto bog001-md-links",
   "main": "./src/index.js",
   "author": "Dulce Mercado <soydulceangelina@gmail.com>",
+  "repository": {
+    "url": "git://github.com/soydulceangelina/md-links"
+  },
   "license": "MIT",
   "bin": {
     "mdLinks": "./bin/global.js"
