@@ -16,16 +16,19 @@ const { readingMarkdown } = require('./readingMarkdown');
 const mdLinks = (path) => {
   const toAbsolute = resolve(path);
   const fileExtension = extname(toAbsolute);
+  const promises = [];
+  let renderLinks;
   if (fileExtension === '.md') {
-    const renderLinks = readingMarkdown(path);
+    renderLinks = readingMarkdown(path);
     renderLinks.forEach((element) => {
-      console.log(`${clc.blue(element.getHref)}, ${clc.yellow(element.getText)}, ${clc.green(element.getFile)}`);
+      promises.push(fetch(element.getHref));
     });
   } else {
     console.log(clc.red.bold('Este archivo no es .md'));
   }
 
-  // return Promise.allSettled(promises);// allSettled recibe un arreglo de
+  return { promise: Promise.allSettled(promises), infoMd: renderLinks };
+  // allSettled recibe un arreglo de
   // promesas y devuelve una promesa con las respuestas sean satisfactorias o no
 };
 
