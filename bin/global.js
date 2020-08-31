@@ -2,12 +2,15 @@
 
 const process = require('process');
 const clc = require('cli-color');
-const mdLinks = require('../src/index');
+const mdLinks = require('../src/validateFile');
 
 // const file = `${__dirname}/../README.md`; // mi path de prueba
 
 const file = process.argv[2];
-const mdLinksInfo = mdLinks(file);
+const mdLinksInfo = mdLinks(file, {
+  validate: process.argv[3] === '--validate' || process.argv[4] === '--validate',
+  stats: process.argv[3] === '--stats' || process.argv[4] === '--stats',
+});
 
 // mdLinksInfo.promise
 //   .then((responses) => {

@@ -13,7 +13,11 @@ const { readingMarkdown } = require('./readingMarkdown');
 // (/home/soydulceangelina/bog001-md-links/src/) desde src sale (../) para buscar el README.md.
 // const file = `${__dirname}/../README.md`; // mi path de prueba
 
-const mdLinks = (path) => {
+function validateOptions() {
+
+}
+
+function getDefaultValues(path) {
   const toAbsolute = resolve(path);
   const fileExtension = extname(toAbsolute);
   const promises = [];
@@ -26,10 +30,33 @@ const mdLinks = (path) => {
   } else {
     console.log(clc.red.bold('Este archivo no es .md'));
   }
-
   return { promise: Promise.allSettled(promises), infoMd: renderLinks };
-  // allSettled recibe un arreglo de
-  // promesas y devuelve una promesa con las respuestas sean satisfactorias o no
-};
+}
 
-module.exports = mdLinks;
+function getValidateValues() {
+
+}
+
+function getStatsValues() {
+
+}
+
+function getFullValues() {
+
+}
+
+module.exports.mdLinks = (path, options) => {
+  if (!options) {
+    return getDefaultValues(path);
+  }
+
+  // return Promise.allSettled(promises)
+  //   .then((res) => {
+  //     const response = res.map(({ value }, index) => {
+  //       const status = value ? value.status : 500;
+  //       return { ...renderLinks[index], status };
+  //     });
+  //     return response;
+  //   })
+  //   .catch((error) => { throw error; });
+};
