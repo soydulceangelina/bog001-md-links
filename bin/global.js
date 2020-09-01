@@ -2,92 +2,59 @@
 
 const process = require('process');
 const clc = require('cli-color');
-const mdLinks = require('../src/validateFile');
+const { mdLinks } = require('../src');
 
 // const file = `${__dirname}/../README.md`; // mi path de prueba
-
 const file = process.argv[2];
-const mdLinksInfo = mdLinks(file, {
-  validate: process.argv[3] === '--validate' || process.argv[4] === '--validate',
-  stats: process.argv[3] === '--stats' || process.argv[4] === '--stats',
-});
 
-// mdLinksInfo.promise
-//   .then((responses) => {
-//     responses.forEach((element) => {
-//       console.log(element);
-//     });
-//   });
+const options = {
+  validate: false,
+  stats: false,
+};
 
 if (process.argv[3] === undefined) {
-  mdLinksInfo.infoMd.forEach((mdL) => {
-    console.log(`${clc.blue(mdL.getHref)}, ${clc.yellow(mdL.getText)}, ${clc.green(mdL.getFile)}`);
-  });
+  mdLinks(file)
+    .then((res) => {
+      res.forEach((mdL) => {
+        console.log(`${clc.blue(mdL.getHref)}, ${clc.yellow(mdL.getText)}, ${clc.green(mdL.getFile)}`);
+      });
+    });
 } else if ((process.argv[3] === '--validate' && process.argv[4] === '--stats') || (process.argv[3] === '--stats' && process.argv[4] === '--validate')) {
-  const totalLinks = [];
-  const brokenLinks = [];
-  const failLinks = [];
-  mdLinksInfo.promise
-    .then((responses) => {
-      responses.forEach((response, index) => {
-        const infoLinks = mdLinksInfo.infoMd[index];
-        totalLinks.push(infoLinks.getHref);
-        if (response.status === 'fulfilled') {
-          if (response.value.status >= 200 && response.value.status <= 309) {
-            console.log(`${clc.red.bgWhite('✔')} ${clc.blue(infoLinks.getHref)}, ${clc.yellow(infoLinks.getText)}, ${clc.green(infoLinks.getFile)}, ${clc.magentaBright('Status:', response.value.status)}`);
-          } else if (response.value.status >= 400) {
-            failLinks.push(infoLinks.getHref);
-            console.log(`${clc.red.bgWhite('✘')} ${clc.red(infoLinks.getHref)}, ${clc.yellow(infoLinks.getText)}, ${clc.green(infoLinks.getFile)}, ${clc.magentaBright('Status:', response.value.status)}`);
-          }
-        } else if (response.status === 'rejected') {
-          brokenLinks.push(infoLinks.getHref);
-          console.log(`${clc.red.bgWhite('✘')} ${clc.red(infoLinks.getHref)}, ${clc.yellow(infoLinks.getText)}, ${clc.green(infoLinks.getFile)}, ${clc.red.bgWhite('Status: Error 500')}`);
+  mdLinks(file, { ...options, validate: true, stats: true })
+    .then((res) => {
+      res.links.forEach((ml) => {
+        if (ml.status >= 200 && ml.status <= 309) {
+          console.log(`${clc.red.bgWhite('✔')} ${clc.blue(ml.getHref)}, ${clc.yellow(ml.getText)}, ${clc.green(ml.getFile)}, ${clc.magentaBright('Status:', ml.status)}`);
+        } else if (ml.status >= 400) {
+          console.log(`${clc.red.bgWhite('✘')} ${clc.red(ml.getHref)}, ${clc.yellow(ml.getText)}, ${clc.green(ml.getFile)}, ${clc.magentaBright('Status:', ml.status)}`);
         }
       });
-      // eslint-disable-next-line max-len
-      const uniqueLinks = totalLinks.filter((link) => totalLinks.filter((l) => l === link).length === 1);
-      console.log(`${clc.white.italic.bgBlack('Estadística: Total de liks:')} ${totalLinks.length}`);
-      console.log(`${clc.white.italic.bgBlack('Estadística: Total de liks unicos:')} ${uniqueLinks.length}`);
-      console.log(`${clc.white.italic.bgBlack('Estadística: Total de liks rotos:')} ${brokenLinks.length + failLinks.length}`);
+      console.log(`${clc.white.italic.bgBlack('Estadística: Total de liks:')} ${res.total}`);
+      console.log(`${clc.white.italic.bgBlack('Estadística: Total de liks unicos:')} ${res.unique}`);
+      console.log(`${clc.white.italic.bgBlack('Estadística: Total de liks rotos:')} ${res.broken}`);
     });
 } else if (process.argv[3] === '--validate') {
-  mdLinksInfo.promise
-    .then((responses) => {
-      responses.forEach((response, index) => {
-        const infoLinks = mdLinksInfo.infoMd[index];
-        if (response.status === 'fulfilled') {
-          if (response.value.status >= 200 && response.value.status <= 309) {
-            console.log(`${clc.red.bgWhite('✔')} ${clc.blue(infoLinks.getHref)}, ${clc.yellow(infoLinks.getText)}, ${clc.green(infoLinks.getFile)}, ${clc.magentaBright('Status:', response.value.status)}`);
-          } else if (response.value.status >= 400) {
-            console.log(`${clc.red.bgWhite('✘')} ${clc.red(infoLinks.getHref)}, ${clc.yellow(infoLinks.getText)}, ${clc.green(infoLinks.getFile)}, ${clc.magentaBright('Status:', response.value.status)}`);
-          }
-        } else if (response.status === 'rejected') {
-          console.log(`${clc.red.bgWhite('✘')} ${clc.red(infoLinks.getHref)}, ${clc.yellow(infoLinks.getText)}, ${clc.green(infoLinks.getFile)}, ${clc.red.bgWhite('Status: Error 500')}`);
+  mdLinks(file, { ...options, validate: true })
+    .then((res) => {
+      res.forEach((mdLink) => {
+        if (mdLink.status >= 200 && mdLink.status <= 309) {
+          console.log(`${clc.red.bgWhite('✔')} ${clc.blue(mdLink.getHref)}, ${clc.yellow(mdLink.getText)}, ${clc.green(mdLink.getFile)}, ${clc.magentaBright('Status:', mdLink.status)}`);
+        } else if (mdLink.status >= 400) {
+          console.log(`${clc.red.bgWhite('✘')} ${clc.red(mdLink.getHref)}, ${clc.yellow(mdLink.getText)}, ${clc.green(mdLink.getFile)}, ${clc.magentaBright('Status:', mdLink.status)}`);
         }
       });
     });
 } else if (process.argv[3] === '--stats') {
-  const totalLinks = [];
-  mdLinksInfo.promise
-    .then((responses) => {
-      responses.forEach((response, index) => {
-        const infoLinks = mdLinksInfo.infoMd[index];
-        totalLinks.push(infoLinks.getHref);
-        if (response.status === 'fulfilled') {
-          if (response.value.status >= 200 && response.value.status <= 309) {
-            console.log(`${clc.red.bgWhite('✔')} ${clc.blue(infoLinks.getHref)}, ${clc.yellow(infoLinks.getText)}, ${clc.green(infoLinks.getFile)}, ${clc.magentaBright('Status:', response.value.status)}`);
-          } else if (response.value.status >= 400) {
-            console.log(`${clc.red.bgWhite('✘')} ${clc.red(infoLinks.getHref)}, ${clc.yellow(infoLinks.getText)}, ${clc.green(infoLinks.getFile)}, ${clc.magentaBright('Status:', response.value.status)}`);
-          }
-        } else if (response.status === 'rejected') {
-          console.log(`${clc.red.bgWhite('✘')} ${clc.red(infoLinks.getHref)}, ${clc.yellow(infoLinks.getText)}, ${clc.green(infoLinks.getFile)}, ${clc.red.bgWhite('Status: Error 500')}`);
+  mdLinks(file, { ...options, stats: true })
+    .then((res) => {
+      res.links.forEach((ml) => {
+        if (ml.status >= 200 && ml.status <= 309) {
+          console.log(`${clc.red.bgWhite('✔')} ${clc.blue(ml.getHref)}, ${clc.yellow(ml.getText)}, ${clc.green(ml.getFile)}, ${clc.magentaBright('Status:', ml.status)}`);
+        } else if (ml.status >= 400) {
+          console.log(`${clc.red.bgWhite('✘')} ${clc.red(ml.getHref)}, ${clc.yellow(ml.getText)}, ${clc.green(ml.getFile)}, ${clc.magentaBright('Status:', ml.status)}`);
         }
       });
-      // eslint-disable-next-line max-len
-      const uniqueLinks = totalLinks.filter((link) => totalLinks.filter((l) => l === link).length === 1);
-      console.log(`${clc.white.italic.bgBlack('Estadística: Total de liks:')} ${totalLinks.length}`);
-      console.log(`${clc.white.italic.bgBlack('Estadística: Total de liks unicos:')} ${uniqueLinks.length}`);
+      console.log(`${clc.white.italic.bgBlack('Estadística: Total de liks:')} ${res.total}`);
+      console.log(`${clc.white.italic.bgBlack('Estadística: Total de liks unicos:')} ${res.unique}`);
     });
 }
-
-// el then recibe las respuestaS, iteramos sobre cada respuesta en el forEach

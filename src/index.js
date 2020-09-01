@@ -4,8 +4,6 @@ const fetch = require('node-fetch');
 const { resolve } = require('path');
 // valida la extension del archivo
 const { extname } = require('path');
-// colores en la consola
-const clc = require('cli-color');
 // mi funcion que ya me trae un arreglo con los links
 const { readingMarkdown } = require('./readingMarkdown');
 
@@ -13,42 +11,67 @@ const { readingMarkdown } = require('./readingMarkdown');
 // (/home/soydulceangelina/bog001-md-links/src/) desde src sale (../) para buscar el README.md.
 // const file = `${__dirname}/../README.md`; // mi path de prueba
 
-function validateOptions() {
-
-}
-
 function getDefaultValues(path) {
-  const toAbsolute = resolve(path);
-  const fileExtension = extname(toAbsolute);
-  const promises = [];
-  let renderLinks;
-  if (fileExtension === '.md') {
-    renderLinks = readingMarkdown(path);
-    renderLinks.forEach((element) => {
-      promises.push(fetch(element.getHref));
-    });
-  } else {
-    console.log(clc.red.bold('Este archivo no es .md'));
-  }
-  return { promise: Promise.allSettled(promises), infoMd: renderLinks };
+  return new Promise((res, rej) => {
+    const toAbsolute = resolve(path);
+    const fileExtension = extname(toAbsolute);
+    if (fileExtension === '.md') {
+      res(readingMarkdown(path));
+    }
+    rej(new Error('Este archivo no es .md'));
+  });
 }
 
-function getValidateValues() {
-
+function getValidateValues(path) {
+  return getDefaultValues(path)
+    .then((renderLinks) => {
+      const promises = [];
+      renderLinks.forEach((element) => {
+        promises.push(fetch(element.getHref));
+      });
+      return Promise.allSettled(promises)
+        .then((res) => res.map(({ value }, index) => {
+          const status = value ? value.status : 500;
+          return { ...renderLinks[index], status };
+        }))
+        .catch((error) => { throw error; });
+    })
+    .catch((error) => { throw error; });
 }
 
-function getStatsValues() {
-
+function getStatsValues(path) {
+  return getValidateValues(path)
+    .then((links) => ({
+      links,
+      total: links.length,
+      // eslint-disable-next-line max-len
+      unique: links.filter((link) => links.filter((l) => l.getHref === link.getHref).length === 1).length,
+    }))
+    .catch((error) => { throw error; });
 }
 
-function getFullValues() {
-
+function getFullValues(path) {
+  return getStatsValues(path)
+    .then((links) => ({
+      ...links,
+      broken: links.links.filter((link) => link.status >= 400).length,
+    }));
 }
 
 module.exports.mdLinks = (path, options) => {
   if (!options) {
     return getDefaultValues(path);
   }
+
+  if (options.validate && !options.stats) {
+    return getValidateValues(path);
+  }
+
+  if (!options.validate && options.stats) {
+    return getStatsValues(path);
+  }
+
+  return getFullValues(path);
 
   // return Promise.allSettled(promises)
   //   .then((res) => {
