@@ -1,8 +1,8 @@
 const { mdLinks } = require('.');
 
-const file = `${__dirname}/../README.md`;
+const file = `${__dirname}/../`;
 
-mdLinks(file, { stats: true, validate: true })
+mdLinks(file, { validate: true })
   .then((res) => {
-    console.log(res.total);
+    console.log(res);
   });

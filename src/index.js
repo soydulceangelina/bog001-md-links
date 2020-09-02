@@ -4,21 +4,62 @@ const fetch = require('node-fetch');
 const { resolve } = require('path');
 // valida la extension del archivo
 const { extname } = require('path');
+const fs = require('fs');
 // mi funcion que ya me trae un arreglo con los links
 const { readingMarkdown } = require('./readingMarkdown');
+// const { processFileOrFolder } = require('./fileOrFolder');
 
 // dirname es una variable global, representa la ruta donde se ejecuta el proceso
 // (/home/soydulceangelina/bog001-md-links/src/) desde src sale (../) para buscar el README.md.
 // const file = `${__dirname}/../README.md`; // mi path de prueba
 
+const itsFile = (path) => {
+  const file = fs.lstatSync(path).isFile();
+  return file;
+};
+
+const itsFolder = (path) => {
+  const folder = fs.lstatSync(path).isDirectory();
+  return folder;
+};
+
 function getDefaultValues(path) {
   return new Promise((res, rej) => {
-    const toAbsolute = resolve(path);
-    const fileExtension = extname(toAbsolute);
-    if (fileExtension === '.md') {
-      res(readingMarkdown(path));
+    if (itsFile(path) === true && itsFolder(path) === false) {
+      const toAbsolute = resolve(path);
+      const fileExtension = extname(toAbsolute);
+      if (fileExtension === '.md') {
+        res(readingMarkdown(path));
+      } else {
+        console.log('Este archivo no es .md');
+      }
+    } if (itsFile(path) === false && itsFolder(path) === true) {
+      const onlyMd = [];
+      const linksByFile = [];
+      const allLinks = [];
+      const filesInFolder = fs.readdirSync(path);
+      filesInFolder.filter((md) => {
+        if (extname(md) === '.md') {
+          onlyMd.push(md);
+        }
+      });
+      onlyMd.forEach((file) => {
+        const route = resolve(file);
+        const fileExtension = extname(route);
+        if (fileExtension === '.md') {
+          linksByFile.push(readingMarkdown(route));
+        } else {
+          console.log(`Este archivo ${route} no es .md`);
+        }
+      });
+      linksByFile.forEach((element) => {
+        element.forEach((n) => {
+          allLinks.push(n);
+        });
+      });
+      res(allLinks);
     }
-    rej(new Error('Este archivo no es .md'));
+    rej(new Error('Este archivo no es valido'));
   });
 }
 
@@ -31,7 +72,14 @@ function getValidateValues(path) {
       });
       return Promise.allSettled(promises)
         .then((res) => res.map(({ value }, index) => {
-          const status = value ? value.status : 500;
+          const okOrFailStatus = () => {
+            if (value.status >= 200 && value.status <= 399) {
+              return (`${value.status} ok`);
+            } if (value.status >= 400) {
+              return (`${value.status} fail`);
+            }
+          };
+          const status = value ? okOrFailStatus() : `${500} fail`;
           return { ...renderLinks[index], status };
         }))
         .catch((error) => { throw error; });
