@@ -41,7 +41,7 @@ Total de liks unicos: 3
 Total de liks rotos: 1
 ```
 
-## Instalar CLI
+## Usar como modulo
     $ npm install soydulceangelina/md-links
 
 ```sh
