@@ -41,9 +41,10 @@ Total de liks unicos: 3
 Total de liks rotos: 1
 ```
 
-## Usar como modulo
+## Instalar Modulo
     $ npm install soydulceangelina/md-links
 
+## Usar Modulo
 ```sh
 const {mdLinks} = require('@soydulceangelina/md-links');
 

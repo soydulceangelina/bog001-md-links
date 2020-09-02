@@ -72,14 +72,7 @@ function getValidateValues(path) {
       });
       return Promise.allSettled(promises)
         .then((res) => res.map(({ value }, index) => {
-          const okOrFailStatus = () => {
-            if (value.status >= 200 && value.status <= 399) {
-              return (`${value.status} ok`);
-            } if (value.status >= 400) {
-              return (`${value.status} fail`);
-            }
-          };
-          const status = value ? okOrFailStatus() : `${500} fail`;
+          const status = value ? value.status : 500;
           return { ...renderLinks[index], status };
         }))
         .catch((error) => { throw error; });
