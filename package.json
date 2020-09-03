@@ -7,6 +7,9 @@
   "repository": {
     "url": "git://github.com/soydulceangelina/md-links"
   },
+  "scripts": {
+    "test": "jest --coverage --verbose --detectOpenHandles"
+  },
   "license": "MIT",
   "bin": {
     "mdLinks": "./bin/global.js"
@@ -25,6 +28,7 @@
   "devDependencies": {
     "eslint": "^7.7.0",
     "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.0"
+    "eslint-plugin-import": "^2.22.0",
+    "jest": "^24.9.0"
   }
 }

@@ -31,25 +31,20 @@ function getDefaultValues(path) {
       if (fileExtension === '.md') {
         res(readingMarkdown(path));
       } else {
-        console.log('Este archivo no es .md');
+        rej(new Error('Este archivo no es md'));
       }
     } if (itsFile(path) === false && itsFolder(path) === true) {
-      const onlyMd = [];
       const linksByFile = [];
       const allLinks = [];
       const filesInFolder = fs.readdirSync(path);
-      filesInFolder.filter((md) => {
-        if (extname(md) === '.md') {
-          onlyMd.push(md);
-        }
-      });
+      const onlyMd = filesInFolder.filter((md) => extname(md) === '.md');
       onlyMd.forEach((file) => {
-        const route = resolve(file);
+        const route = `${path}/${file}`;
         const fileExtension = extname(route);
         if (fileExtension === '.md') {
           linksByFile.push(readingMarkdown(route));
         } else {
-          console.log(`Este archivo ${route} no es .md`);
+          rej(new Error(`Este archivo ${route} no es .md`));
         }
       });
       linksByFile.forEach((element) => {
@@ -99,7 +94,7 @@ function getFullValues(path) {
     }));
 }
 
-module.exports.mdLinks = (path, options) => {
+const mdLinks = (path, options) => {
   if (!options) {
     return getDefaultValues(path);
   }
@@ -124,3 +119,4 @@ module.exports.mdLinks = (path, options) => {
   //   })
   //   .catch((error) => { throw error; });
 };
+module.exports = mdLinks;
