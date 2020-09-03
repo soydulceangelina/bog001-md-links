@@ -4,7 +4,7 @@ const process = require('process');
 const clc = require('cli-color');
 const mdLinks = require('../src');
 
-// const file = `${__dirname}/../README.md`; // mi path de prueba
+// const file = `${__dirname}/../test/folder`; // mi path de prueba
 const file = process.argv[2];
 
 const options = {
