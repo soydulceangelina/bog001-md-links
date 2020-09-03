@@ -46,7 +46,7 @@ Total de liks rotos: 1
 
 ## Usar Modulo
 ```sh
-const {mdLinks} = require('@soydulceangelina/md-links');
+const mdLinks = require('@soydulceangelina/md-links');
 
 //devuelve un arreglo de objetos con las url, el archivo y el texto
 mdLinks('./README.md')
