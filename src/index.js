@@ -33,7 +33,7 @@ function getDefaultValues(path) {
       } else {
         rej(new Error('Este archivo no es md'));
       }
-    } if (itsFile(path) === false && itsFolder(path) === true) {
+    } else if (itsFile(path) === false && itsFolder(path) === true) {
       const linksByFile = [];
       const allLinks = [];
       const filesInFolder = fs.readdirSync(path);
